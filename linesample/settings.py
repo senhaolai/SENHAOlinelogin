@@ -37,31 +37,56 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'myapp',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    
+    #需要的第三方登入放下方
     'allauth.socialaccount.providers.line',
-    'myapp',
-    'social_django',
+    
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.line.LineOAuth2',
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
+
+SITE_ID = 2
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_LOGOUT_ON_GET = True
 
 SOCIALACCOUNT_PROVIDERS = {
     'line': {
-        'SCOPE': ['profile', 'openid'],
-        'CHANNEL_ID': 2005563613,
-        'CHANNEL_SECRET': '9a29c77fd42c4040f8b2bc252d16641c',
+        'SCOPE': [
+            'profile',
+            'openid',
+            'email'
+        ],
+        'AUTH_PARAMS': {
+            'response_type': 'code'
+        },
+        'EXCHANGE_URL': 'https://api.line.me/oauth2/v2.1/token',
+        'USERINFO_URL': 'https://api.line.me/v2/profile',
+        'VERIFIED_EMAIL': True,
+        'VERSION': 'v2.1'
     }
 }
 
-LOGIN_URL = '/login/'
-LOGOUT_URL = '/login/'
-LOGIN_REDIRECT_URL = '/login/'
-LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+# SOCIAL_AUTH_LINE_KEY = 2005563613
+# SOCIAL_AUTH_LINE_SECRET = '9a29c77fd42c4040f8b2bc252d16641c'
+
+# SOCIAL_AUTH_LINE_REDIRECT_URI = 'http://127.0.0.1:8080/accounts/line/login/callback/'
+
+# LOGIN_URL = '/login/'
+# LOGOUT_URL = '/login/'
+# LOGIN_REDIRECT_URL = '/login/'
+# LOGOUT_REDIRECT_URL = '/login/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,9 +153,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-Hant'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Taipei'
 
 USE_I18N = True
 

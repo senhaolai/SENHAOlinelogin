@@ -20,10 +20,10 @@ from myapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('line/callback/', views.line_callback, name='line_callback'),
-    path('login/', views.login, name='login'),
-    path('social-auth/', include('social_django.urls', namespace='social')),
+    # path('line/callback/', views.line_callback, name='line_callback'),
+    # path('login/', views.login, name='login'),
+    # path('social-auth/', include('social_django.urls', namespace='social')),
     path('accounts/', include('allauth.urls')),
-    path('accounts/', include('allauth.socialaccount.urls')),
-    path('line/', include('allauth.socialaccount.providers.line.urls')),
+    # path('accounts/', include('allauth.socialaccount.urls')),
+    # path('line/', include('allauth.socialaccount.providers.line.urls')),
 ]
