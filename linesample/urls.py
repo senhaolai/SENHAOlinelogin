@@ -20,10 +20,12 @@ from myapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('line/callback/', views.line_callback, name='line_callback'),
-    # path('login/', views.login, name='login'),
-    # path('social-auth/', include('social_django.urls', namespace='social')),
+
+    # line login 
     path('accounts/', include('allauth.urls')),
-    # path('accounts/', include('allauth.socialaccount.urls')),
-    # path('line/', include('allauth.socialaccount.providers.line.urls')),
+    path('accounts/user_profile/', views.user_profile),
+ 
+    # line pay  的請求和回調
+    path('initiate_payment/', views.initiate_payment, name='initiate_payment'),
+    path('confirm_payment/', views.confirm_payment, name='confirm_payment'),
 ]

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,61 +33,71 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     'myapp',
+
+    # allauth 啟動必須項
+    'django.contrib.auth',
+    'django.contrib.messages',
+    'django.contrib.sites',
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    
-    #需要的第三方登入放下方
+    # 可添加需要的第三方登入
     'allauth.socialaccount.providers.line',
-    
 ]
 
+# allauth 基本設定
+
+SITE_ID = 2  # 設置網站為 id=2 的url
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email' # 指定了用戶登入時的驗證方法。'username'只允許使用用戶名登入。'email'只允許使用電子郵件登入。'username_email'允許使用用戶名或電子郵件登入。
+ACCOUNT_EMAIL_REQUIRED = True # 指定用戶在註冊時是否必須提供電子郵件地址。設置為 True 表示註冊時必須填寫電子郵件。
+ACCOUNT_REDIRECT_URL = '/accounts/profile/' # 指定用戶成功登入後將被重定向到的URL。通常，這個URL對應的是用戶的個人資料頁面。
+ACCOUNT_LOGOUT_REDIRECT_URL = '/' # 指定用戶登出後將被重定向到的URL。通常，這個URL對應的是登入頁面。
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE =True # 指定用戶註冊時需輸入兩次密碼
+ACCOUNT_LOGOUT_ON_GET = False # 用戶在登出時使用 POST 方法，這通常是更安全和標準的做法
+ACCOUNT_EMAIL_VERIFICATION = "none"  # 'optional' / 'mandatory' / 'none' , 'mandatory' 為需驗證信箱才可登入 , 而'optional'為仍會發送驗證郵件
+
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',  # django後台可獨立於allauth登入
+    'allauth.account.auth_backends.AuthenticationBackend', # 配置allauth獨有的認證方法,如email登入
+
 )
 
-SITE_ID = 2
-ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_LOGOUT_ON_GET = True
 
 SOCIALACCOUNT_PROVIDERS = {
     'line': {
         'SCOPE': [
-            'profile',
-            'openid',
-            'email'
+            'profile',  # 設置授權範圍，要求訪問用戶的基本資料
+            'openid',   # 設置授權範圍，要求訪問 OpenID 身份驗證
+            'email'     # 設置授權範圍，要求訪問用戶的電子郵件地址（如果有）
         ],
         'AUTH_PARAMS': {
-            'response_type': 'code'
+            'response_type': 'code'  # 指定授權碼授權流程，用戶授權後返回授權碼
         },
-        'EXCHANGE_URL': 'https://api.line.me/oauth2/v2.1/token',
-        'USERINFO_URL': 'https://api.line.me/v2/profile',
-        'VERIFIED_EMAIL': True,
-        'VERSION': 'v2.1'
+        'EXCHANGE_URL': 'https://api.line.me/oauth2/v2.1/token',  # Line 的 OAuth 2.0 Token 端點 URL
+        'USERINFO_URL': 'https://api.line.me/v2/profile',  # Line 的用戶資料獲取端點 URL
+        'VERIFIED_EMAIL': True,  # 不要求用戶的電子郵件地址進行確認
+        'VERSION': 'v2.1'  # 使用 Line API 的版本號為 v2.1
     }
 }
 
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'  # 表示在使用社交帳戶（如 Line、Facebook 等）註冊後，用戶必須通過驗證其提供的電子郵件地址來啟用他們的帳戶 
+                                           # 'optional' / 'mandatory' / 'none' , 'mandatory' 為需驗證信箱才可登入 , 而'optional'為仍會發送驗證郵件 
 
-# SOCIAL_AUTH_LINE_KEY = 2005563613
-# SOCIAL_AUTH_LINE_SECRET = '9a29c77fd42c4040f8b2bc252d16641c'
+# Import necessary modules
+from linepay import LinePayApi
 
-# SOCIAL_AUTH_LINE_REDIRECT_URI = 'http://127.0.0.1:8080/accounts/line/login/callback/'
+# Line Pay 設定
+LINE_PAY_CHANNEL_ID = '2005645540'
+LINE_PAY_CHANNEL_SECRET = 'e7adf1f2dccc2f8244811175f2f12186'
+LINE_PAY_IS_SANDBOX = True  # 設為 True 表示使用測試環境，False 表示使用正式環境
 
-# LOGIN_URL = '/login/'
-# LOGOUT_URL = '/login/'
-# LOGIN_REDIRECT_URL = '/login/'
-# LOGOUT_REDIRECT_URL = '/login/'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -109,7 +120,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request', # allauth啟動必須項
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -125,8 +136,14 @@ WSGI_APPLICATION = 'linesample.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'linelog',
+        'USER': 'root',
+        'PASSWORD': '1qaz@wsx',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'", 
+        'charset': 'utf8mb4',
     }
 }
 
