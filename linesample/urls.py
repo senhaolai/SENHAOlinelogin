@@ -28,4 +28,6 @@ urlpatterns = [
     # line pay  的請求和回調
     path('initiate_payment/', views.initiate_payment, name='initiate_payment'),
     path('confirm_payment/', views.confirm_payment, name='confirm_payment'),
+
+    path('login/success/', views.login_success_view, name='login_success'),
 ]

@@ -56,7 +56,8 @@ SITE_ID = 2  # 設置網站為 id=2 的url
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email' # 指定了用戶登入時的驗證方法。'username'只允許使用用戶名登入。'email'只允許使用電子郵件登入。'username_email'允許使用用戶名或電子郵件登入。
 ACCOUNT_EMAIL_REQUIRED = True # 指定用戶在註冊時是否必須提供電子郵件地址。設置為 True 表示註冊時必須填寫電子郵件。
-ACCOUNT_REDIRECT_URL = '/accounts/profile/' # 指定用戶成功登入後將被重定向到的URL。通常，這個URL對應的是用戶的個人資料頁面。
+# ACCOUNT_REDIRECT_URL = '/login/success/' # 指定用戶成功登入後將被重定向到的URL。通常，這個URL對應的是用戶的個人資料頁面。
+ACCOUNT_LOGIN_REDIRECT_URL = '/' # 指定用戶成功登入後將被重定向到的URL。通常，這個URL對應的是用戶的個人資料頁面。
 ACCOUNT_LOGOUT_REDIRECT_URL = '/' # 指定用戶登出後將被重定向到的URL。通常，這個URL對應的是登入頁面。
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE =True # 指定用戶註冊時需輸入兩次密碼
 ACCOUNT_LOGOUT_ON_GET = False # 用戶在登出時使用 POST 方法，這通常是更安全和標準的做法
@@ -96,6 +97,10 @@ from linepay import LinePayApi
 LINE_PAY_CHANNEL_ID = '2005645540'
 LINE_PAY_CHANNEL_SECRET = 'e7adf1f2dccc2f8244811175f2f12186'
 LINE_PAY_IS_SANDBOX = True  # 設為 True 表示使用測試環境，False 表示使用正式環境
+
+# Line Messaging API 設定
+LINE_CHANNEL_ACCESS_TOKEN = 'KRBAAFlhY+PM/jA9/AxQiOLz4tHbWPXgREMmCsUjuUpEH50Yc/KBdVBGxyiBpNjxoIWauxtTG2Fl3NV+1+u/DIVmeZXinCybuOiED01A4PJR2OQZh/7dj5ntx9xxY+nqaQIajI82WnMkQ/ouoVVxcwdB04t89/1O/w1cDnyilFU='
+LINE_CHANNEL_SECRET = '7713eb64927e3f309c4e13cd21eff429'
 
 
 

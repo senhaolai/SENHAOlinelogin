@@ -52,7 +52,7 @@ def initiate_payment(request):
     payment_params = {
         'amount': 1,  # 付款金額
         'currency': 'TWD',  # 貨幣代碼
-        'orderId': 'order_id',  # 訂單編號
+        'orderId': order_id,  # 訂單編號
         'packages': [  # 必須包含商品包信息
             {
                 'id': 'package1',
@@ -108,3 +108,20 @@ def confirm_payment(request):
         print(f"Received error: {str(e)}")  # 添加调试输出
         return JsonResponse({'error': str(e)})
 
+from .utils import send_line_message
+
+def send_message_to_user(request):
+    user_id = request.user.profile.line_user_id  # 假設您已經儲存了 LINE 使用者的識別符
+    message = "您好！這是來自 Django 的訊息。"
+    send_line_message(user_id, message)
+    return render(request, 'message_sent.html')
+
+from .utils import send_login_success_message
+from allauth.socialaccount.models import SocialAccount
+
+def login_success_view(request):
+    # 假設您已經確認用戶已成功登入並且已獲取到了使用者的 LINE User ID
+    social_account = SocialAccount.objects.get(provider='line', user=request.user)
+    line_user_id = social_account.uid
+    send_login_success_message(line_user_id)
+    return redirect('/')  # 或者返回其他適當的頁面或重定向
